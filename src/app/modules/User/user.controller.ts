@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
 import { UserServices } from "./user.service";
 import sendResponse from "../../utils/sendResponse";
+import { AuthServices } from "../Auth/auth.service";
 
 const createUser = catchAsync(async (req:Request,res:Response)=>{
     
@@ -11,6 +12,14 @@ const createUser = catchAsync(async (req:Request,res:Response)=>{
 })
 
 
+const signInUser = catchAsync(async (req:Request,res:Response)=>{
+    
+    const payload = req.body
+    const result = await AuthServices.signIn(payload)
+})
+
+
 export const UserControllers = {
-createUser
+createUser,
+signInUser
 }
