@@ -1,10 +1,10 @@
 import { Model } from "mongoose";
-
+export type TUserRole = "user" | "admin";
 export type TUser = {
     name:string;
     email:string;
     password:string;
-    role:"user" | "admin";
+    role:TUserRole;
     phone:string,
     address:string;
 }

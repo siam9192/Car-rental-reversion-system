@@ -96,8 +96,14 @@ if(query.isBooked){
 const result = await Booking.find(filter).populate([{path:"car"},{path:"user"}])
 return result;
 }
+
+const getAllUserBookingsFromDB  = async (email:string)=>{
+const result = await Booking.find({email:email})
+return result 
+}
 export const BookingServices = {
     createBookingIntoDB,
     returnTheCar,
-    getAllBookingsFromDB
+    getAllBookingsFromDB,
+    getAllUserBookingsFromDB
 }

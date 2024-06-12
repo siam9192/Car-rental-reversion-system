@@ -11,9 +11,8 @@ app.use("/api",router)
 
 app.use((err:any,req:Request,res:Response,next:NextFunction)=>{
 res.status(err.statusCode || 400).json({
-    success:true,
-    message:err.message,
-    err:err
+    success:false,
+    message:err.message
 })
 
 app.use((req,res)=>{
