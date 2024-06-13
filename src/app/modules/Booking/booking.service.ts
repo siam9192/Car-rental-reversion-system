@@ -3,10 +3,10 @@ import AppError from "../../Errors/AppError";
 import { Car } from "../Car/car.model";
 import { User } from "../User/user.model";
 import { Booking } from "./Booking.model";
-import { TBooking } from "./booking.interface";
+import {TBookingRequest } from "./booking.interface";
 import mongoose from "mongoose";
 
-const createBookingIntoDB = async (payload:TBooking)=>{
+const createBookingIntoDB = async (payload:TBookingRequest)=>{
     const startTime = Number(payload.startTime)
     // Checking the start time is that in 24 hours
     if(startTime && startTime > 24){
@@ -14,20 +14,29 @@ const createBookingIntoDB = async (payload:TBooking)=>{
     }
 
     // Checking is the user exists on the database
-    const user = await User.isUserExists(payload.user.toString())
-    
+    const user = await User.findOne({email:payload.email})
+  
     // Checking is the car exists on the database 
-    const car = await Car.isCarExists(payload.car.toString())
-    console.log(payload.car.toString())
     
+    const car = await Car.isCarExists(payload.carId.toString())
+    
+   
     if(!car){
         throw new AppError(400,"Car not found")
     }
     if(!user){
         throw new AppError(400,"User not found")
     }
-
-    const result = (await Booking.create(payload)).populate([{path:"car"},{path:"user"}])
+   
+ 
+    const booking = {
+    car:car._id,
+    user:user._id,
+    date:payload.date,
+    startTime:payload.startTime
+    }
+   
+    const result = (await Booking.create(booking)).populate([{path:"car"},{path:"user"}])
     return result
 }
 const returnTheCar = async (payload:{bookingId:string;endTime:string}) =>{
@@ -71,12 +80,7 @@ return result
 }
 
 const getAllBookingsFromDB = async(query:any)=>{
-// const queryFields = ["carId","date","isBooked"]
-// Object.keys(query).forEach(key=>{
-//     if(!queryFields.includes(key)){
-//         delete query[key]
-//     }
-// })
+
 const filter:any = {
     
 }

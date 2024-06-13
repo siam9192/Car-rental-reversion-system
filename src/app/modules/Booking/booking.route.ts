@@ -6,7 +6,7 @@ import { Auth } from "../../middlewares/auth";
 
 const router = Router();
 
-router.post("/",validateRequest(BookingValidations.createBookingValidationSchema),BookingController.createBooking)
+router.post("/",Auth("user"),validateRequest(BookingValidations.createBookingValidationSchema),BookingController.createBooking)
 
 router.get("/",Auth("admin"),BookingController.getAllBookings)
 router.get("/my-bookings",Auth("user"),BookingController.getAllUserBookings)

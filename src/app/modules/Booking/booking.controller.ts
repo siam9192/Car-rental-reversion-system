@@ -5,8 +5,10 @@ import sendResponse from "../../utils/sendResponse";
 
 const createBooking = catchAsync(async(req:Request,res:Response)=>{
     const payload = req.body ;
+    payload.email = req.user.email
     const result = await BookingServices.createBookingIntoDB(payload)
     sendResponse(res,{status:true,statusCode:200,message:"Booking created successfully",data:result})
+    
 })
 
 

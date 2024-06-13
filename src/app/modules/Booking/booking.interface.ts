@@ -10,6 +10,13 @@ export type TBooking = {
     isBooked?:"confirmed" | "unconfirmed"
 }
 
+export type TBookingRequest = {
+    email:string,
+    carId:string,
+    date:string,
+    startTime:string
+
+}
 export interface TBookingStaticsMethods extends Model<TBooking>{
-    isBookingExists(bookingId:string):TBooking | null
+    isBookingExists(bookingId:string):Promise<TBooking >
 }

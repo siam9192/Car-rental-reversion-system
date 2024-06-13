@@ -11,5 +11,5 @@ export type TUser = {
 
 
 export interface TUserStaticMethods extends Model<TUser> {
-    isUserExists(userId:string): TUser | null
+    isUserExists(userId:string): Promise<TUser>
 }

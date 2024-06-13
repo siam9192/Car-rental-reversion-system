@@ -1,10 +1,10 @@
-import { JwtPayload } from "jsonwebtoken"
+
 import AppError from "../../Errors/AppError"
 import { User } from "../User/user.model"
 import { TJwtPayload, TSignIn } from "./auth.interface"
 import { CreateAccessToken, MatchPassword } from "./auth.utils"
 import config from "../../config"
-import { object } from "zod"
+
 
 const signIn = async (payload:TSignIn)=>{
 const user:any = await User.findOne({email:payload.email}).select("+password")
@@ -17,17 +17,6 @@ if(!user){
 
 const {password:userPassword} = user
 
-const userData:any = {
-
-}
-
-
-// Removing password from user object and insert into userData object
-// Object.entries(otherUserData).forEach(ele=>{
-//     if(ele[0] !== "password"){
-//       userData[ele[0]] = ele[1]
-//     }
-// })
 
 
 
@@ -47,14 +36,15 @@ const jwtPayload:TJwtPayload = {
 // Creating access token
 const accessToken = CreateAccessToken(jwtPayload,config.jwt_access_secret as string,config.jwt_access_token_expire_time as string)
 
-
-const result = {
-user:null,
+const userData  = await User.findOne({email:payload.email})
+return {
+user:userData,
 accessToken
 }
 
-return result
 }
+
+
 
 
 export const AuthServices = {

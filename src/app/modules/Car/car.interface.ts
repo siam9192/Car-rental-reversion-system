@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 
 export type TCar = {
     name:string;
@@ -12,5 +12,5 @@ export type TCar = {
 }
 
 export interface TCarStaticMethods extends Model<TCar> {
-    isCarExists (carId:string):TCar | null;
+    isCarExists (carId:string):Promise<TCar & {_id:Types.ObjectId}>;
 } 

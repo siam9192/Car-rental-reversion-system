@@ -38,9 +38,7 @@ export const GlobalErrorHandler:ErrorRequestHandler = (err,req,res,next)=>{
         message = errHandler.message,
         errorSources = errHandler.errorResources
     }
-   else if(err instanceof AppError){
-    statusCode
-   }
+   
    else if (err instanceof AppError) {
     statusCode = err?.statusCode;
     message = err.message;
@@ -51,6 +49,7 @@ export const GlobalErrorHandler:ErrorRequestHandler = (err,req,res,next)=>{
       },
     ];
   } else if (err instanceof Error) {
+  
     message = err.message;
     errorSources = [
       {
@@ -59,6 +58,7 @@ export const GlobalErrorHandler:ErrorRequestHandler = (err,req,res,next)=>{
       },
     ];
   }
+ 
   return res.status(statusCode).json({
     success: false,
     message,
