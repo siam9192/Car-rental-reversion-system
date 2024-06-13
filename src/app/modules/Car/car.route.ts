@@ -1,25 +1,38 @@
-import { Router } from "express";
-import validateRequest from "../../middlewares/validateRequest";
-import { CarValidations } from "./car.validation";
-import { carControllers } from "./car.controller";
-import { BookingValidations } from "../Booking/booking.validation";
-import { BookingController } from "../Booking/booking.controller";
-import { Auth } from "../../middlewares/auth";
+import { Router } from 'express';
+import validateRequest from '../../middlewares/validateRequest';
+import { CarValidations } from './car.validation';
+import { carControllers } from './car.controller';
+import { BookingValidations } from '../Booking/booking.validation';
+import { BookingController } from '../Booking/booking.controller';
+import { Auth } from '../../middlewares/auth';
 
 const router = Router();
 
+router.post(
+  '/',
+  Auth('admin'),
+  validateRequest(CarValidations.createCarValidationSchema),
+  carControllers.createCar,
+);
 
+router.patch(
+  '/return',
+  Auth('admin'),
+  validateRequest(BookingValidations.updateReturnTheCarValidationSchema),
+  BookingController.returnTheCar,
+);
 
-router.post("/",Auth("admin"),validateRequest(CarValidations.createCarValidationSchema),carControllers.createCar)
+router.put(
+  '/:carId',
+  Auth('admin'),
+  validateRequest(CarValidations.carUpdateValidationSchema),
+  carControllers.updateCar,
+);
 
-router.patch("/return",validateRequest(BookingValidations.updateReturnTheCarValidationSchema),BookingController.returnTheCar)
+router.get('/:carId', carControllers.getCarById);
 
-router.put("/:carId",Auth("admin"),validateRequest(CarValidations.carUpdateValidationSchema),carControllers.updateCar)
+router.get('/', carControllers.getAllCars);
 
-router.get("/:carId",carControllers.getCarById)
+router.delete('/:carId', Auth('admin'), carControllers.deleteCar);
 
-router.get('/',carControllers.getAllCars)
-
-router.delete("/:carId",carControllers.deleteCar)
-
-export const CarRouter = router
+export const CarRouter = router;

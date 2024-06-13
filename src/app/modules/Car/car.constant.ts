@@ -1,1 +1,1 @@
-export const CarStatus = ["available","unavailable"]
+export const CarStatus = ['available', 'unavailable'];
