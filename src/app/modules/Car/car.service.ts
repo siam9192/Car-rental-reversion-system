@@ -10,7 +10,7 @@ const updateCarIntoDB = async (carId: string, payload: Partial<TCar>) => {
   // Check is the car available in the database
   const isCarExists = await Car.findById(carId);
   if (!isCarExists) {
-    throw new AppError(400, 'Car is not found');
+    throw new AppError(400, 'Car  not found');
   }
 
   // Updating the car
@@ -35,7 +35,7 @@ const deleteCarIntoDB = async (carId: string) => {
   const isCarExists = await Car.findById(carId);
 
   if (!isCarExists) {
-    throw new AppError(400, 'Car is not found');
+    throw new AppError(400, 'Car not found');
   }
 
   const result = await Car.findByIdAndUpdate(
@@ -44,7 +44,7 @@ const deleteCarIntoDB = async (carId: string) => {
     { new: true },
   );
 
-  return null;
+  return result;
 };
 export const CarServices = {
   createCarIntoDB,

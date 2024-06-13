@@ -1,4 +1,3 @@
-import { date, number } from 'zod';
 import AppError from '../../Errors/AppError';
 import { Car } from '../Car/car.model';
 import { User } from '../User/user.model';
@@ -7,25 +6,26 @@ import { TBookingRequest } from './booking.interface';
 import mongoose from 'mongoose';
 
 const createBookingIntoDB = async (payload: TBookingRequest) => {
-  const startTime = Number(payload.startTime);
+  const startTime = payload.startTime;
+  const splitedStartTime = startTime.split(':');
+
   // Checking the start time is that in 24 hours
-  if (startTime && startTime > 24) {
+  if (
+    startTime &&
+    Number(splitedStartTime[0]) + Number(splitedStartTime[1] || '00') / 60 > 24
+  ) {
     throw new AppError(400, 'Invalid start time');
   }
 
-  // Checking is the user exists on the database
+  const car = await Car.isCarExists(payload.carId.toString());
+  // Checking is the car exists on the database or is the car deleted
+  if (!car || car.isDeleted) {
+    throw new AppError(400, 'Car not found');
+  }
+
   const user = await User.findOne({ email: payload.email });
 
-  // Checking is the car exists on the database
-
-  const car = await Car.isCarExists(payload.carId.toString());
-
-  if (!car) {
-    throw new AppError(400, 'Car not found');
-  }
-  if (car.isDeleted) {
-    throw new AppError(400, 'Car not found');
-  }
+  // Checking is the user exists on the database
   if (!user) {
     throw new AppError(400, 'User not found');
   }
@@ -36,7 +36,7 @@ const createBookingIntoDB = async (payload: TBookingRequest) => {
     date: payload.date,
     startTime: payload.startTime,
   };
-  let id;
+
   const session = await mongoose.startSession();
   await session.startTransaction();
   try {
@@ -74,7 +74,7 @@ const returnTheCar = async (payload: {
 
   // Checking is the booking exists in the database
   if (!booking) {
-    throw new AppError(400, 'Booking is not found');
+    throw new AppError(400, 'Booking  not found');
   }
 
   const car = await Car.isCarExists(booking.car.toString());
@@ -100,48 +100,50 @@ const returnTheCar = async (payload: {
     totalCost =
       (convertedEndTime - convertedStartTime) * (car.pricePerHour / 60);
   }
-  const session = await mongoose.startSession()
-  await session.startTransaction()
+  const session = await mongoose.startSession();
+  await session.startTransaction();
 
   try {
-  const updatedCarStatus = await Car.findByIdAndUpdate(car._id,{status:"available"},{session,runValidators:true})
-  const updateBooking = await Booking.findByIdAndUpdate(
-    bookingId,
-    { endTime: endTime, totalCost, isBooked: 'confirmed' },
-    { new: true,session},
-  ).populate([{ path: 'car' }, { path: 'user' }]);
+    // Updating car status unavailable to available
+    const updatedCarStatus = await Car.findByIdAndUpdate(
+      car._id,
+      { status: 'available' },
+      { session, runValidators: true },
+    );
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      bookingId,
+      { endTime: endTime, totalCost, isBooked: 'confirmed' },
+      { new: true, session },
+    ).populate([{ path: 'car' }, { path: 'user' }]);
 
-
-  if(!updatedCarStatus || !updateBooking){
-   throw new Error()
+    if (!updatedCarStatus || !updatedBooking) {
+      throw new Error();
+    }
+    await session.commitTransaction();
+    await session.endSession();
+    return updatedBooking;
+  } catch {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(400, 'Return the car unsuccessful');
   }
-  await session.commitTransaction()
-  await session.endSession()
-  return updateBooking
- 
-  }
-  catch{
-    await session.abortTransaction()
-    await session.endSession()
-   throw new AppError(400,"Return the car unsuccessful")
-  }
-
-//   return result;
 };
 
 const getAllBookingsFromDB = async (query: any) => {
   const filter: any = {};
-
   if (query.carId) {
+    //  Checking is the car exists in the database
+    const car = await Car.isCarExists(query.id);
+
+    if (!car) {
+      throw new AppError(404, 'Car not found');
+    }
+
     filter.car = new mongoose.Types.ObjectId(query.carId);
   }
 
   if (query.date) {
     filter.date = query.date;
-  }
-
-  if (query.isBooked) {
-    filter.isBooked = query.isBooked;
   }
 
   const result = await Booking.find(filter).populate([

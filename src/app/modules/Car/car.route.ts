@@ -15,7 +15,7 @@ router.post(
   carControllers.createCar,
 );
 
-router.patch(
+router.put(
   '/return',
   Auth('admin'),
   validateRequest(BookingValidations.updateReturnTheCarValidationSchema),
