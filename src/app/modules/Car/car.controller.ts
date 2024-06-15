@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../utils/catchAsync';
 import { CarServices } from './car.service';
-import sendResponse from '../../utils/sendResponse';
+import sendResponse, { SendDataNotFoundResponse } from '../../utils/sendResponse';
 
 const createCar = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -30,16 +30,12 @@ const getCarById = catchAsync(async (req: Request, res: Response) => {
   const { carId } = req.params;
   const result = await CarServices.getCarByIdFromDB(carId);
   if (!result) {
-    sendResponse(res, {
-      statusCode: 404,
-      status: false,
-      message: 'No Data found',
-      data: result,
-    });
+    SendDataNotFoundResponse(res)
+    return
   }
 
   sendResponse(res, {
-    statusCode: 201,
+    statusCode: 200,
     status: true,
     message: 'Car  retrieved successfully',
     data: result,

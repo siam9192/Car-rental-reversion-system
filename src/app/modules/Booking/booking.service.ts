@@ -136,12 +136,6 @@ const getAllBookingsFromDB = async (query: any) => {
   const { carId, date } = query;
   const filter: any = {};
   if (carId) {
-    //  Checking is the car exists in the database
-    const car = await Car.isCarExists(carId);
-    if (!car) {
-      throw new AppError(404, 'Car not found');
-    }
-
     filter.car = new mongoose.Types.ObjectId(carId);
   }
 

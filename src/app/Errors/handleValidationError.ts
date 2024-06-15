@@ -10,7 +10,7 @@ export const HandleValidationError = (err: mongoose.Error.ValidationError) => {
   });
   return {
     statusCode,
-    message: 'Validation error',
+    message: err.message,
     errorMessages,
   };
 };

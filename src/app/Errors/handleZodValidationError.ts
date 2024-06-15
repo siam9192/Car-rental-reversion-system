@@ -12,7 +12,7 @@ export const HandleZodValidationError = (err: ZodError): TErrorInterface => {
 
   return {
     statusCode,
-    message: 'Validation error',
+    message: err.message,
     errorMessages,
   };
 };

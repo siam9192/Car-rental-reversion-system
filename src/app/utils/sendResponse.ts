@@ -20,9 +20,16 @@ export const SendDataNotFoundResponse = (res: Response) => {
   res.status(404).json({
     success: false,
     statusCode: 404,
-    message: 'Data not found',
+    message: 'No Data Found',
     data: [],
   });
 };
 
+export const SendNoAccessResponse = (res:Response)=>{
+  res.status(401).json({
+    success:false,
+   statusCode: 401,
+   message:"You have no access to this route"
+  })
+}
 export default sendResponse;

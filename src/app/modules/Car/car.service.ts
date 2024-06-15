@@ -17,7 +17,7 @@ const updateCarIntoDB = async (carId: string, payload: Partial<TCar>) => {
   const result = await Car.findByIdAndUpdate(
     carId,
     { ...payload },
-    { new: true },
+    { new: true,runValidators:true },
   );
   return result;
 };

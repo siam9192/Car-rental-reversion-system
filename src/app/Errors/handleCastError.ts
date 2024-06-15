@@ -12,7 +12,7 @@ export const HandleCastError = (err: CastError): TErrorInterface => {
 
   return {
     statusCode,
-    message: 'Cast Error',
+    message: err?.message,
     errorMessages,
   };
 };

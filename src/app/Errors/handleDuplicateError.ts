@@ -10,7 +10,7 @@ export const HandleDuplicateError = (err: any): TErrorInterface => {
     const errorMessages: TErrorSource[] = [
       {
         path: '',
-        message: `${extractedMessage} is already exists`,
+        message: err?.messages || "",
       },
     ];
   
@@ -18,7 +18,7 @@ export const HandleDuplicateError = (err: any): TErrorInterface => {
   
     return {
       statusCode,
-      message: 'Duplicate entry',
+      message: err?.message,
       errorMessages,
     };
   };

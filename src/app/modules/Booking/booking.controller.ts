@@ -12,7 +12,7 @@ const createBooking = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     status: true,
     statusCode: 200,
-    message: 'Booking created successfully',
+    message: 'Car booked successfully',
     data: result,
   });
 });
