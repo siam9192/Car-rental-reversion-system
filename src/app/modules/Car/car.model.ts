@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { TCar, TCarStaticMethods } from './car.interface';
 import { CarStatus } from './car.constant';
-import { boolean } from 'zod';
 
 const carModelSchema = new Schema<TCar>(
   {

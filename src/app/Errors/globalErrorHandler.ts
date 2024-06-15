@@ -15,7 +15,7 @@ export const GlobalErrorHandler: ErrorRequestHandler = (
 ) => {
   let statusCode = 500;
   let message = 'Something went wrong!';
-  let errorSources: TErrorSource[] = [
+  let errorMessages: TErrorSource[] = [
     {
       path: '',
       message: 'Something went wrong',
@@ -25,19 +25,19 @@ export const GlobalErrorHandler: ErrorRequestHandler = (
   if (err.name === 'CastError') {
     const errHandler = HandleCastError(err);
     statusCode = errHandler.statusCode;
-    (message = errHandler.message), (errorSources = errHandler.errorResources);
+    (message = errHandler.message), (errorMessages = errHandler.errorMessages);
   } else if (err instanceof ZodError) {
     const errHandler = HandleZodValidationError(err);
     statusCode = errHandler.statusCode;
-    (message = errHandler.message), (errorSources = errHandler.errorResources);
+    (message = errHandler.message), (errorMessages = errHandler.errorMessages);
   } else if (err.name === 'ValidationError') {
     const errHandler = HandleValidationError(err);
     statusCode = errHandler.statusCode;
-    (message = errHandler.message), (errorSources = errHandler.errorResources);
+    (message = errHandler.message), (errorMessages = errHandler.errorMessages);
   } else if (err instanceof AppError) {
     statusCode = err?.statusCode;
     message = err.message;
-    errorSources = [
+    errorMessages = [
       {
         path: '',
         message: err?.message,
@@ -45,7 +45,7 @@ export const GlobalErrorHandler: ErrorRequestHandler = (
     ];
   } else if (err instanceof Error) {
     message = err.message;
-    errorSources = [
+    errorMessages = [
       {
         path: '',
         message: err?.message,
@@ -56,7 +56,7 @@ export const GlobalErrorHandler: ErrorRequestHandler = (
   return res.status(statusCode).json({
     success: false,
     message,
-    errorSources,
+    errorMessages,
     stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };

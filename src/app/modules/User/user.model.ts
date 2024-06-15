@@ -49,7 +49,7 @@ userModelSchema.pre('save', async function () {
   );
 });
 userModelSchema.post('save', function () {
-  this.password = '';
+  this.password == ""
 });
 
 export const User = model<TUser, TUserStaticMethods>('User', userModelSchema);

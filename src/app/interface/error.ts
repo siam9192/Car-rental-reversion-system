@@ -5,5 +5,5 @@ export type TErrorSource = {
 export type TErrorInterface = {
   statusCode: number;
   message: string;
-  errorResources: TErrorSource[];
+  errorMessages: TErrorSource[];
 };

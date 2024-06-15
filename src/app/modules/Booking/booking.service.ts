@@ -82,20 +82,23 @@ const returnTheCar = async (payload: {
   let convertedEndTime;
   let convertedStartTime;
 
-  // Convert booking end time in minute
-  const splitEndTime = payload.endTime.split(':');
-  convertedEndTime = Number(splitEndTime[0]) * 60 + Number(splitEndTime[1]);
+  // Converting booking end time in minute
+  const splittedEndTime = payload.endTime.split(':');
+  convertedEndTime =
+    Number(splittedEndTime[0]) * 60 + Number(splittedEndTime[1]);
 
-  // Convert booking start time in minute
-  const splitStartTime = booking.startTime.split(':');
+  // Converting booking start time in minute
+  const splittedStartTime = booking.startTime.split(':');
   convertedStartTime =
-    Number(splitStartTime[0]) * 60 + Number(splitStartTime[1] || '00');
+    Number(splittedStartTime[0]) * 60 + Number(splittedStartTime[1] || '00');
 
   // Checking the end time format
   if (convertedEndTime < convertedStartTime) {
     throw new AppError(400, 'End time  cannot be getter than start time');
   }
   let totalCost = 0;
+
+  // Calculating total cost of booking
   if (car?.pricePerHour) {
     totalCost =
       (convertedEndTime - convertedStartTime) * (car.pricePerHour / 60);
@@ -130,20 +133,20 @@ const returnTheCar = async (payload: {
 };
 
 const getAllBookingsFromDB = async (query: any) => {
+  const { carId, date } = query;
   const filter: any = {};
-  if (query.carId) {
+  if (carId) {
     //  Checking is the car exists in the database
-    const car = await Car.isCarExists(query.id);
-
+    const car = await Car.isCarExists(carId);
     if (!car) {
       throw new AppError(404, 'Car not found');
     }
 
-    filter.car = new mongoose.Types.ObjectId(query.carId);
+    filter.car = new mongoose.Types.ObjectId(carId);
   }
 
-  if (query.date) {
-    filter.date = query.date;
+  if (date) {
+    filter.date = date;
   }
 
   const result = await Booking.find(filter).populate([
@@ -154,7 +157,11 @@ const getAllBookingsFromDB = async (query: any) => {
 };
 
 const getAllUserBookingsFromDB = async (email: string) => {
-  const result = await Booking.find({ email: email });
+  const user = await User.findOne({email:email})
+  if(!user){
+    return []
+  }
+  const result = await Booking.find({user:user?._id});
   return result;
 };
 export const BookingServices = {

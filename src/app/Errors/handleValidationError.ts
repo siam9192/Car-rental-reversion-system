@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 export const HandleValidationError = (err: mongoose.Error.ValidationError) => {
   const statusCode = 400;
-  const errorResources = Object.keys(err.errors).map((issue) => {
+  const errorMessages = Object.keys(err.errors).map((issue) => {
     return {
       path: err.errors[issue].path,
       message: err.errors[issue].message,
@@ -11,6 +11,6 @@ export const HandleValidationError = (err: mongoose.Error.ValidationError) => {
   return {
     statusCode,
     message: 'Validation error',
-    errorResources,
+    errorMessages,
   };
 };

@@ -31,22 +31,26 @@ const returnTheCar = catchAsync(async (req: Request, res: Response) => {
 const getAllBookings = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
   const result = await BookingServices.getAllBookingsFromDB(query);
-  sendResponse(res, {
-    status: true,
-    statusCode: 200,
-    message: 'Bookings' || 'No Data Found',
-    data: result.length ? result : [],
-  });
+  if (result && result.length) {
+    sendResponse(res, {
+      status: true,
+      statusCode: 200,
+      message: 'Bookings retrieved successfully',
+      data: result,
+    });
+  } else {
+    SendDataNotFoundResponse(res);
+  }
 });
 
 const getAllUserBookings = catchAsync(async (req: Request, res: Response) => {
   const { email } = req.user;
   const result = await BookingServices.getAllUserBookingsFromDB(email);
-  if (result.length) {
+  if (result && result.length) {
     sendResponse(res, {
       statusCode: 200,
       status: false,
-      message: 'Bookings retrieved successfully',
+      message: 'My Bookings retrieved successfully',
       data: result,
     });
   } else {

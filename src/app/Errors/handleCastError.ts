@@ -3,7 +3,7 @@ import { TErrorInterface } from '../interface/error';
 
 export const HandleCastError = (err: CastError): TErrorInterface => {
   const statusCode = 400;
-  const errorResources = [
+  const errorMessages = [
     {
       path: err.path || '',
       message: err.message || '',
@@ -12,7 +12,7 @@ export const HandleCastError = (err: CastError): TErrorInterface => {
 
   return {
     statusCode,
-    message: 'id is not validate',
-    errorResources,
+    message: 'Cast Error',
+    errorMessages,
   };
 };

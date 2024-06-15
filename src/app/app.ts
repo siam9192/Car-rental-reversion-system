@@ -9,12 +9,7 @@ app.use(express.json());
 
 app.use('/api', router);
 
-// app.use((err:any,req:Request,res:Response,next:NextFunction)=>{
-// res.status(err.statusCode || 400).json({
-//     success:false,
-//     message:err.message,
-//     err
-// })
+
 
 app.use(GlobalErrorHandler);
 

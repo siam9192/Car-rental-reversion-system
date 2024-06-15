@@ -11,7 +11,7 @@ export const Auth = (...requiredRoles: TUserRole[]) => {
       throw new AppError(400, 'You have no access to this route');
     }
     const token = req.headers.authorization?.split('Bearer ')[1];
-
+   
     if (!token) {
       throw new AppError(401, 'You have no access to this route');
     }

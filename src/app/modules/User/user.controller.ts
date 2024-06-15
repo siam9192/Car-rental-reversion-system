@@ -10,17 +10,13 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 201,
     status: true,
-    message: 'User is created successfully',
+    message: 'User registered successfully',
     data: result,
   });
 });
 
-const signInUser = catchAsync(async (req: Request, res: Response) => {
-  const payload = req.body;
-  const result = await AuthServices.signIn(payload);
-});
+
 
 export const UserControllers = {
-  createUser,
-  signInUser,
+  createUser
 };

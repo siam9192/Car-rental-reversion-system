@@ -7,7 +7,9 @@ const createUserIntoDB = async (payload: TUser) => {
   if (isUserExists) {
     throw new AppError(400, 'User is already exists on this email');
   }
+  
   const result = await User.create(payload);
+  
   return result;
 };
 

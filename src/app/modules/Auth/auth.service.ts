@@ -9,7 +9,7 @@ const signIn = async (payload: TSignIn) => {
 
   // Checking is the user exists in the database
   if (!user) {
-    throw new AppError(400, 'User not found');
+    throw new AppError(400, 'Incorrect email or password');
   }
 
   const { password: userPassword } = user;
@@ -41,5 +41,5 @@ const signIn = async (payload: TSignIn) => {
 };
 
 export const AuthServices = {
-  signIn,
+  signIn
 };

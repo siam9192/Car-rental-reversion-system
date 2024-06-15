@@ -3,7 +3,7 @@ import { TErrorInterface } from '../interface/error';
 
 export const HandleZodValidationError = (err: ZodError): TErrorInterface => {
   const statusCode = 400;
-  const errorResources = err.issues.map((issue) => {
+  const errorMessages = err.issues.map((issue) => {
     return {
       path: issue.path.at(-1) || '',
       message: issue.message,
@@ -13,6 +13,6 @@ export const HandleZodValidationError = (err: ZodError): TErrorInterface => {
   return {
     statusCode,
     message: 'Validation error',
-    errorResources,
+    errorMessages,
   };
 };
