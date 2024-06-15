@@ -3,7 +3,7 @@
 
 - command (npm install) for install all package of this file
 
-- declare (DATABASE_URL) variable on .env file others important  variable is already declared on .env file
+- declare (DATABASE_URL) variable on .env file others required  variable  already declared on .env file
 
 - Now command ( npm run start:dev ) for run the server
 
