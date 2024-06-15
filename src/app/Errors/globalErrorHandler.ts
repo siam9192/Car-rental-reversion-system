@@ -6,6 +6,7 @@ import AppError from './AppError';
 import { TErrorInterface, TErrorSource } from '../interface/error';
 import { ZodError } from 'zod';
 import config from '../config';
+import { HandleDuplicateError } from './handleDuplicateError';
 
 export const GlobalErrorHandler: ErrorRequestHandler = (
   err,
@@ -22,15 +23,21 @@ export const GlobalErrorHandler: ErrorRequestHandler = (
     },
   ];
 
-  if (err.name === 'CastError') {
+  if (err?.name === 'CastError') {
     const errHandler = HandleCastError(err);
     statusCode = errHandler.statusCode;
     (message = errHandler.message), (errorMessages = errHandler.errorMessages);
-  } else if (err instanceof ZodError) {
+  } else if (err?.code === 11000) {
+    const errHandler = HandleDuplicateError(err);
+    statusCode = errHandler?.statusCode;
+    message = errHandler?.message;
+    errorMessages = errHandler?.errorMessages;
+  }
+  else if (err instanceof ZodError) {
     const errHandler = HandleZodValidationError(err);
     statusCode = errHandler.statusCode;
     (message = errHandler.message), (errorMessages = errHandler.errorMessages);
-  } else if (err.name === 'ValidationError') {
+  } else if (err?.name === 'ValidationError') {
     const errHandler = HandleValidationError(err);
     statusCode = errHandler.statusCode;
     (message = errHandler.message), (errorMessages = errHandler.errorMessages);

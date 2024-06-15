@@ -21,7 +21,7 @@ const updateCar = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 201,
     status: true,
-    message: 'Car updated successfully',
+    message: 'A Car updated successfully',
     data: result,
   });
 });

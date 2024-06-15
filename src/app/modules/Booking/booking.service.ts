@@ -161,7 +161,7 @@ const getAllUserBookingsFromDB = async (email: string) => {
   if(!user){
     return []
   }
-  const result = await Booking.find({user:user?._id});
+  const result = await Booking.find({user:user?._id}).populate([{path:"user"},{path:"car"}]);
   return result;
 };
 export const BookingServices = {
