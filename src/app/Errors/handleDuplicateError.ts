@@ -10,7 +10,7 @@ export const HandleDuplicateError = (err: any): TErrorInterface => {
     const errorMessages: TErrorSource[] = [
       {
         path: '',
-        message: err?.messages || "",
+        message: err?.message || "",
       },
     ];
   
